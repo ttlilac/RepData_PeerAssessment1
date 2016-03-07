@@ -1,35 +1,52 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r, echo=TRUE}
+
+```r
 require(ggplot2)
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.2.3
+```
+
+```r
 act<-read.csv("activity.csv")
 ```
 
 
 ## What is mean total number of steps taken per day?
-```{r, echo=TRUE}
+
+```r
 totalsteps<- aggregate(act$steps, by=list(date=act$date), FUN=sum)
 hist(totalsteps$x)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)
+
+```r
 meansteps<- aggregate(act$steps, by=list(date=act$date), FUN=mean)
 mediansteps<- aggregate(act$steps, by=list(date=act$date), FUN=median)
 ```
 
 ## What is the average daily activity pattern?
-```{r, echo=TRUE}
+
+```r
 act2<-act[!is.na(act$steps),]
 meaninterval<- aggregate(act2$steps, by=list(interval=act2$interval), FUN=mean)
 plot(meaninterval$interval, meaninterval$x, type="l")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)
+
 ## Imputing missing values
-```{r, echo=TRUE}
+
+```r
 for(i in 1:length(act$steps)){
         if(is.na(act$steps[i])){
                 res= i%%288
@@ -40,7 +57,8 @@ for(i in 1:length(act$steps)){
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r, echo=TRUE}
+
+```r
 act$date<-as.Date(act$date)
 fv<-c("weekday","weekend")
 fv=factor(fv)
@@ -54,3 +72,5 @@ for(i in 1:length(act$steps)){
 meaninterval2<- aggregate(act$steps, by=list(interval=act$interval, factor=act$factor), FUN=mean)
 ggplot(meaninterval2, aes(interval, x)) + geom_line() + facet_grid(factor ~ .)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)
